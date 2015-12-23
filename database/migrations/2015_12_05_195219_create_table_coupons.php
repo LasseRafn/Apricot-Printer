@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateTableCoupons extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,14 +12,14 @@ class CreateUsersTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('users', function (Blueprint $table)
+		Schema::create('coupons', function (Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('account_id', false, true)->index();
-			$table->string('name');
-			$table->string('email')->unique();
-			$table->string('password', 60);
-			$table->rememberToken();
+			$table->string('code', 16)->index();
+			$table->string('description', 40)->index();
+			$table->integer('max_uses')->default('-1');
+			$table->timestamp('valid_from')->nullable();
+			$table->timestamp('valid_to')->nullable();
 			$table->timestamps();
 			$table->softDeletes();
 		});
@@ -32,6 +32,6 @@ class CreateUsersTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('users');
+		Schema::drop('coupons');
 	}
 }
