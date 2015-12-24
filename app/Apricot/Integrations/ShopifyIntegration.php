@@ -83,7 +83,7 @@ class ShopifyIntegration implements StoreIntegrationInterface, StoreAuthIntegrat
 	{
 		$this->shop = $domain;
 
-		return "https://{$this->shop}.myshopify.com/admin/oauth/authorize?client_id={$this->apiKey}&scope=" . implode(',', $this->scopes) . "&redirect_uri={$this->redirectUrl}&state={$this->identifier}";
+		return "https://{$this->shop}/admin/oauth/authorize?client_id={$this->apiKey}&scope=" . implode(',', $this->scopes) . "&redirect_uri={$this->redirectUrl}&state={$this->identifier}";
 	}
 
 	/**

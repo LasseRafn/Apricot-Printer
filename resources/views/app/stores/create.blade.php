@@ -1,6 +1,11 @@
 @extends('app.layout')
 
 @section('content')
+	@if($errors->count() > 0)
+		@foreach ($errors->all() as $message)
+			{{ $message }}
+		@endforeach
+	@endif
 	<form method="post" action="{{ action('Apricot\StoreController@store') }}">
 		@if($storeTypes->count() > 1)
 			<select name="store-type">
@@ -14,7 +19,7 @@
 		@endif
 
 		<input type="text" name="store-url" placeholder="Store URL" />
-		<small>Example: store.myshopify.com</small>
+		<small>Example: <strong>store.myshopify.com</strong> or mystore.com.</small>
 		{!! csrf_field() !!}
 	</form>
 @stop

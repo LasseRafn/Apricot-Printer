@@ -30,7 +30,7 @@ class IntegrationController extends Controller
 	function getFinalize($method = 'shopify', $url = '')
 	{
 		$id = \Session::get('integration_id', 0);
-		$job = (new GetStoreAuthToken($method, $url))->onQueue('store_auth');
+		$job = (new GetStoreAuthToken($method, $url, $id))->onQueue('store_auth');
 		$this->dispatch($job);
 
 		return \Redirect::action('Apricot\StoreController@show', [ 'id' => $id ]);

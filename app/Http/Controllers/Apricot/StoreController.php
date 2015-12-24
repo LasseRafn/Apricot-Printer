@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Apricot;
 
 use App\Apricot\Repositories\StoreRepository;
-use App\Apricot\Repositories\StoreTypeRespository;
+use App\Apricot\Repositories\StoreTypeRepository;
 use App\Jobs\GetStoreAuthToken;
 use App\Store;
 use Illuminate\Http\Request;
@@ -15,10 +15,10 @@ class StoreController extends Controller
 	private $storeRepo;
 	private $typeRepo;
 
-	function __construct(StoreRepository $storeRepository, StoreTypeRespository $storeTypeRespository)
+	function __construct(StoreRepository $storeRepository, StoreTypeRepository $storeTypeRepository)
 	{
 		$this->storeRepo = $storeRepository;
-		$this->typeRepo  = $storeTypeRespository;
+		$this->typeRepo  = $storeTypeRepository;
 		$this->middleware('auth');
 	}
 
@@ -54,9 +54,21 @@ class StoreController extends Controller
 	public function store(Request $request)
 	{
 		$storeType = $request->get('store-type');
-		$storeUrl  = strtolower($request->get('store-url'));
+		$storeUrl  = $request->get('store-url');
 
-		$storeId = $this->storeRepo->create($storeUrl, $storeType)->getId();
+		$validator = $this->storeRepo->validate($storeUrl, $storeType);
+
+		if ( $validator->fails() )
+		{
+			return \Redirect::action('Apricot\StoreController@create')
+				->withErrors($validator->messages())
+				->withInput($request->except('_token'));
+		}
+
+		$store = $this->storeRepo->create($storeUrl, $storeType);
+
+		$storeId  = $store->getId();
+		$storeUrl = $store->getDomain();
 
 		return redirect("/authorize/start/$storeType/$storeUrl/$storeId");
 	}
@@ -64,7 +76,7 @@ class StoreController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  int $id
+	 * @param string $identifierOrId
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
@@ -89,7 +101,7 @@ class StoreController extends Controller
 	 */
 	public function edit($id)
 	{
-		//
+		echo 'edit';
 	}
 
 	/**

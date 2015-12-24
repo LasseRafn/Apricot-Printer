@@ -24,6 +24,11 @@ class GetStoreAuthToken extends Job implements SelfHandling, ShouldQueue
 	private $url;
 
 	/**
+	 * @var int
+	 */
+	private $storeId;
+
+	/**
 	 * @var string
 	 */
 	private $method;
@@ -33,10 +38,11 @@ class GetStoreAuthToken extends Job implements SelfHandling, ShouldQueue
 	 *
 	 * @return void
 	 */
-	function __construct($method = 'shopify', $url = '')
+	function __construct($method = 'shopify', $url = '', $id = 0)
 	{
 		$this->method = $method;
 		$this->url = $url;
+		$this->storeId = $id;
 		$this->integrationMethods = new IntegrationMethods();
 	}
 
@@ -59,6 +65,7 @@ class GetStoreAuthToken extends Job implements SelfHandling, ShouldQueue
 		{
 			// todo: set site auth token = $token
 			// todo: set status of store
+			// $this->storeId
 			return true;
 		}
 
